@@ -48,7 +48,26 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
   });
 };
 
+dg_autocomplete.run = function(variables, input) {
+  if (input.val == '') { return; } // @TODO add a way for devs to react to empty
+  // 1. Invoke the fetcher go get the server data
+  // 2. Send the results to the handler
+  // 3. Prep the post render
+  // 4. Render the element from the handler
+  // 5. Inject rendered results into placeholder and run post render
+  variables._fetcher(input).then(function(results) {
+    var element = variables._handler(input, results);
+    if (!element.results) { return; }
+    var itemList = element.results;
+    dg.autocompleteAddClassToWidget(itemList, 'autocomplete');
+    dg.autocompleteAttachPostRender(itemList, variables, input, results);
+    document.querySelectorAll('[autocomplete="' + input.id + '"]')[0].innerHTML = dg.render(element);
+    dg.runPostRenders();
+  });
+};
+
 dg.autocompleteVerify = function(variables) {
+  var id = variables._attributes.id;
   // Set up a default fetcher if one wasn't provided.
   if (!variables._fetcher) {
     console.log('dg.theme_autocomplete - no _fetcher provided for element: ' + id);
@@ -75,3 +94,4 @@ dg.autocompleteVerify = function(variables) {
 
   return true;
 };
+
