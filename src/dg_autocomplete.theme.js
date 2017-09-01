@@ -3,7 +3,6 @@
  * @param variables
  *
  *  _fetcher - {Function}(input)
- *    Returns
  *    param {Object} input - The autocomplete text field.
  *    returns {Promise} A Promise that fetches data from Drupal, builds the results into an array and resolves them.
  *
@@ -18,7 +17,8 @@
  *      param {Array} results - The result set from the _fetcher.
  *      param {Object} item - The list item that was clicked.
  *
- *  _text_input {Object} (Optional)
+ *  _text_input {Object} (Optional) Render element properties to be merged into the autocomplete text input.
+ *
  */
 dg.theme_autocomplete = function(variables) {
 
