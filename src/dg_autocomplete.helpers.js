@@ -41,7 +41,9 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
     for (var i = 0; i < items.length; i++) {
       items[i].setAttribute('delta', i);
       items[i].onclick = function() {
-        hiddenInput.setAttribute('value', this.getAttribute('value'));
+        if (hiddenInput) {
+          hiddenInput.setAttribute('value', this.getAttribute('value'));
+        }
         variables._clicker(hiddenInput, input, results, this);
       };
     }
@@ -49,7 +51,21 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
 };
 
 dg_autocomplete.run = function(variables, input) {
-  if (input.val == '') { return; } // @TODO add a way for devs to react to empty
+  // Grab the results placeholder.
+  var placeholder = document.querySelectorAll('[autocomplete="' + input.id + '"]')[0];
+
+  // Prep a done handler to inject the html and run post renders.
+  var done = function(html) {
+    placeholder.innerHTML = html;
+    dg.runPostRenders();
+  };
+
+  // Handle an empty input (aka text cleared out).
+  if (input.value == '') {
+    done('');
+    return;
+  }
+
   // 1. Invoke the fetcher go get the server data
   // 2. Send the results to the handler
   // 3. Prep the post render
@@ -57,12 +73,12 @@ dg_autocomplete.run = function(variables, input) {
   // 5. Inject rendered results into placeholder and run post render
   variables._fetcher(input).then(function(results) {
     var element = variables._handler(input, results);
-    if (!element.results) { return; }
-    var itemList = element.results;
-    dg.autocompleteAddClassToWidget(itemList, 'autocomplete');
-    dg.autocompleteAttachPostRender(itemList, variables, input, results);
-    document.querySelectorAll('[autocomplete="' + input.id + '"]')[0].innerHTML = dg.render(element);
-    dg.runPostRenders();
+    if (element.results) {
+      var itemList = element.results;
+      dg.autocompleteAddClassToWidget(itemList, 'autocomplete');
+      dg.autocompleteAttachPostRender(itemList, variables, input, results);
+    }
+    done(dg.render(element));
   });
 };
 
