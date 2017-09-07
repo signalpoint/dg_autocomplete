@@ -12,7 +12,7 @@
  *      returns {Object} A DrupalGap Render Element with an `item_list` called `results` to be rendered into the
  *                       result container.
  *
- *  _clicker - {Function}(input, results, item)
+ *  _clicker - {Function}(input, results, item) - optional
  *      param {Object} input - The autocomplete text field.
  *      param {Array} results - The result set from the _fetcher.
  *      param {Object} item - The list item that was clicked.

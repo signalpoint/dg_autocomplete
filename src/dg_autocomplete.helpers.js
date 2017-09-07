@@ -32,7 +32,7 @@ dg.autocompleteAddClassToWidget = function(itemList, className) {
 };
 
 dg.autocompleteAttachPostRender = function(itemList, variables, input, results) {
-  // Attach a post render to the item list that attaches click listeners to the items.
+  // Attach a post render to the item list that attaches click listeners to the items, if there is a handler.
   if (!itemList._postRender) { itemList._postRender = []; }
   itemList._postRender.push(function() {
     var hiddenInput = document.getElementById(variables._attributes.id);
@@ -40,12 +40,14 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
     var items = document.querySelectorAll(selector);
     for (var i = 0; i < items.length; i++) {
       items[i].setAttribute('delta', i);
-      items[i].onclick = function() {
-        if (hiddenInput) {
-          hiddenInput.setAttribute('value', this.getAttribute('value'));
-        }
-        variables._clicker(hiddenInput, input, results, this);
-      };
+      if (variables._clicker) {
+        items[i].onclick = function() {
+          if (hiddenInput) {
+            hiddenInput.setAttribute('value', this.getAttribute('value'));
+          }
+          variables._clicker(hiddenInput, input, results, this);
+        };
+      }
     }
   });
 };
@@ -100,13 +102,7 @@ dg.autocompleteVerify = function(variables) {
     return false;
   }
 
-  // Set up a default clicker if one wasn't provided.
-  if (!variables._clicker) {
-    console.log('dg.theme_autocomplete - no _clicker provided for element: ' + id);
-    // @TODO add default Views JSON based handler.
-    //variables._clicker = function(input) { };
-    return false;
-  }
+  // We don't require a _clicker, since a _handler's rendering of an item can have its own click handling.
 
   return true;
 };
