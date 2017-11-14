@@ -89,8 +89,19 @@ form.which = {
 };
 ```
 
-Just attach the `_friends` property to the autocomplete element, then any changes to the radios will trigger the autcomplete to run again:
+Just attach the `_friends` property to the autocomplete element, then any changes to the radios will trigger the autocomplete to run again:
 
 ```
 _friends: ['input[name=which]']
+```
+
+The `_friends` property utilizes [`document.querySelectorAll()`](https://www.w3schools.com/jsref/met_document_queryselectorall.asp), so it is easy to choose your friends, ha.
+
+You can select one more more friends to trigger the autocomplete to run again:
+
+```
+_friends: [
+  'input[name=which]',
+  'input[id=foo]'
+]
 ```
