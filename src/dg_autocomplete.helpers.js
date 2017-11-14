@@ -68,7 +68,7 @@ dg_autocomplete.run = function(variables, input) {
     return;
   }
 
-  // 1. Invoke the fetcher go get the server data
+  // 1. Invoke the fetcher to go get the server data
   // 2. Send the results to the handler
   // 3. Prep the post render
   // 4. Render the element from the handler
@@ -106,4 +106,3 @@ dg.autocompleteVerify = function(variables) {
 
   return true;
 };
-
