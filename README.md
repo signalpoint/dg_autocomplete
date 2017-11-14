@@ -4,6 +4,8 @@ The DrupalGap 8 Autocomplete module.
 
 When used as a [Form Element](http://docs.drupalgap.org/8/Forms/Form_Elements), an Autocomplete input is very useful indeed.
 
+The three main properties of an autocomplete are its `_fetcher`, `_handler` and an optional `_clicker`.
+
 ```
 form.title = {
 
@@ -75,7 +77,9 @@ form.title = {
 
 ## "Friend" elements
 
-It's possible to have other form elements trigger an autocomplete to run again when their value changes. A simple example is two radio buttons next to an autocomplete that let's the user toggle between to search buckets:
+It's possible to have other form elements trigger an autocomplete to run again when their value changes.
+
+A simple example would be two radio buttons next to an autocomplete input, which let's the user toggle between two different search routines:
 
 ```
 form.which = {
@@ -94,6 +98,16 @@ Just attach the `_friends` property to the autocomplete element, then any change
 ```
 _friends: ['input[name=which]']
 ```
+
+When the autocomplete runs again, your `_fetcher`, `_handler`, and optional `_clicker` all have access to the value of the radios, so you can make dynamic decisions about what to do. To get the value of the radio, you can use a `document.querySelector()`:
+
+```
+var which = document.querySelector('input[name=which]:checked').value;
+```
+
+Using radio buttons is only an example, you can use any inputs you like, and adjust the query selector accordingly.
+
+### Multiple friends
 
 The `_friends` property utilizes [`document.querySelectorAll()`](https://www.w3schools.com/jsref/met_document_queryselectorall.asp), so it is easy to choose your friends, ha.
 
