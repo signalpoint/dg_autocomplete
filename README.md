@@ -63,7 +63,7 @@ form.title = {
     // Grab the delta value for the clicked row, and then get the result data for the row.
     var delta = item.getAttribute('delta');
     var row = data[delta];
-    console.log('Clicked on', row);
+    console.log('Clicked on', delta, row);
 
     // Grab the value that was set on the hidden input.
     var myGroupId = hiddenInput.getAttribute('value');
@@ -74,6 +74,8 @@ form.title = {
   
 };
 ```
+
+The `_clicker` property is provided for convenience, and is optional. Alternatively, you can design your result items in the `_handler` in such a way that they themselves can be clicked, e.g. maybe a link on some text of image, etc, enjoy the flexibility here and be creative with the display of your results.
 
 ## "Friend" elements
 
