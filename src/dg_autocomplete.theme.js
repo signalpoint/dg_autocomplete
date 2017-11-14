@@ -19,12 +19,14 @@
  *
  *  _text_input {Object} (Optional) Render element properties to be merged into the autocomplete text input.
  *
+ *  _friends {Array} (Optional) An array of document.querySelector strings whose element's value changing should
+ *      trigger the autocomplete to run again.
+ *
  */
 dg.theme_autocomplete = function(variables) {
 
   // We turn an autocomplete into a hidden element to hold onto its value, and then add widgets next to it for the
   // actual text input and results placeholder.
-  // @TODO utilize children render elements instead of flat markup if possible, better for form alterations.
   variables._attributes.type = 'hidden';
   var textInput = dg.autocompletePrepTextInput(variables);
   if (!dg.autocompleteVerify(variables)) { return; }
@@ -46,6 +48,21 @@ dg.theme_autocomplete = function(variables) {
           dg_autocomplete.run(variables, input);
         }, dg_autocomplete._doneTypingInterval);
       });
+
+      // If there are any friend elements for this autocomplete, attach listeners to them so any changes on those
+      // friend elements will also trigger the autocomplete.
+      if (variables._friends) {
+        var friends = variables._friends;
+        for (var i = 0; i < friends.length; i++) {
+          var friend = friends[i];
+          var elements = document.querySelectorAll(friend);
+          for (var j = 0; j < elements.length; j++) {
+            elements[j].addEventListener('change', function() {
+              dg_autocomplete.run(variables, document.getElementById(id));
+            });
+          }
+        }
+      }
 
     }]
   });
