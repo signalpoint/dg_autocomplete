@@ -9,55 +9,88 @@ form.title = {
 
   // Set up the form element basics.
   _type: 'autocomplete',
-  _title: dg.t('Search'),
+  _title: 'Search',
   _title_placeholder: true,
 
   // Query Drupal (or any API) for the external data...
   _fetcher: function(input) {
     return new Promise(function(ok, error) {
-    
-      // Get the data, then send it back.
+
+      // Get the data, then send it to the handler..
       example.searchStuff(
         input.value
       ).then(ok);
-    
+
     });
   },
 
-  // Receive the external data back, and decide how it should be rendered...
-  _handler: function(input, results) {
-  
-    // Make an items list of the results.
-    var items = [];
-    for (var i = 0; i < results.length; i++) {
-      items.push(results[i]);
-    }
-  
-    // Build and return a render element with a "results" item list widget.
+  // Receive the data from the fetcher, then decide how it should be rendered...
+  _handler: function(input, data) {
+
     var element = {};
-    if (items.length) {
-      element.results = {
-        _theme: 'item_list',
-        _items: items
-      };
-    }
-    else {
+
+    if (!data.length) {
+
       element.empty = {
         _theme: 'message',
         _message: dg.t('No results found.'),
         _type: 'warning'
       };
+
     }
-      
+    else {
+
+      var items = [];
+      for (var i = 0; i < data.length; i++) {
+        items.push(data[i]);
+      }
+      element.results = {
+        _theme: 'item_list',
+        _items: items
+      };
+
+    }
+
     return element;
-    
+
   },
   
-  // Decide what should be done when a user clicks on an autocomplete result...
-  _clicker: function(hiddenInput, input, results, item) {
+  // Optional, decide what should be done when a user clicks on an autocomplete result...
+  _clicker: function(hiddenInput, input, data, item) {
+
+    // Grab the delta value for the clicked row, and then get the result data for the row.
+    var delta = item.getAttribute('delta');
+    var row = data[delta];
+    console.log('Clicked on', row);
+
+    // Grab the value that was set on the hidden input.
     var myGroupId = hiddenInput.getAttribute('value');
+    
+    // Go to a page.
     dg.goto('group/' + myGroupId);
   }
   
 };
+```
+
+## "Friend" elements
+
+It's possible to have other form elements trigger an autocomplete to run again when their value changes. A simple example is two radio buttons next to an autocomplete that let's the user toggle between to search buckets:
+
+```
+form.which = {
+  _title: dg.t('Search by'),
+  _type: 'radios',
+  _options: {
+    relevance: dg.t('Relevance'),
+    date: dg.t('Date')
+  },
+  _default_value: 'relevance'
+};
+```
+
+Just attach the `_friends` property to the autocomplete element, then any changes to the radios will trigger the autcomplete to run again:
+
+```
+_friends: ['input[name=which]']
 ```
