@@ -12,7 +12,12 @@
  *      returns {Object} A DrupalGap Render Element with an `item_list` called `results` to be rendered into the
  *                       result container.
  *
- *  _clicker - {Function}(input, results, item) - optional
+ *  _target - {String} Optional, a documentQuerySelector string identifying the target element to place the rendered
+ *                     results from the "_handler". If a value is not provided, a target div is automatically created
+ *                     for you directly below the text input field.
+ *
+ *  _clicker - {Function}(hiddenInput, input, results, item) - optional
+ *      param {Object} hiddenInput - The hidden input for form state values assembly, validation and submission.
  *      param {Object} input - The autocomplete text field.
  *      param {Array} results - The result set from the _fetcher.
  *      param {Object} item - The list item that was clicked.
@@ -32,12 +37,25 @@ dg.theme_autocomplete = function(variables) {
   if (!dg.autocompleteVerify(variables)) { return; }
   var id = textInput._attributes.id;
 
+  // Let's build the markup now...
+
+  // Open the container.
+  var markup = '<div class="autocomplete-wrapper">';
+
+  // Add the hidden input.
+  markup += '<input ' + dg.attributes(variables._attributes) + '/>';
+
+  // Add the text input.
+  markup += '<input ' + dg.attributes(textInput._attributes) + '/>';
+
+  // If no target is specified, add a div input.
+  if (!variables._target) { markup += '<div autocomplete="' + id + '"></div>'; }
+
+  // Close the container.
+  markup += '</div>';
+
   return dg.render({
-    _markup: '<div class="autocomplete-wrapper">' +
-      '<input ' + dg.attributes(variables._attributes) + '/>' +
-      '<input ' + dg.attributes(textInput._attributes) + '/>' +
-      '<div autocomplete="' + id + '"></div>' +
-    '</div>',
+    _markup: markup,
     _postRender: [function() {
 
       // When the user is done typing, run the autocomplete.

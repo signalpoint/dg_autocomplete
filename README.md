@@ -13,6 +13,24 @@ form.title = {
   _type: 'autocomplete',
   _title: 'Search',
   _title_placeholder: true,
+  
+  // Optional, set up any custom attributes for the hidden input.
+  _attributes: {
+    foo: 'bar'
+  },
+
+  // Optional, attach any custom properties (e.g. attributes) to the text input render element.
+  _text_input: {
+    _attributes: {
+      class: ['foo', 'bar']
+    },
+  },
+
+  // Optional, attach any friends.
+  //_friends: ['#some-input', '#some-other-input'],
+
+  // Optional, decide where the results will be rendered, defaults to directly after the text input.
+  //_target: ['#some-div']
 
   // Query Drupal (or any API) for the external data...
   _fetcher: function(input) {
@@ -75,7 +93,7 @@ form.title = {
 };
 ```
 
-The `_clicker` property is provided for convenience, and is optional. Alternatively, you can design your result items in the `_handler` in such a way that they themselves can be clicked, e.g. maybe a link on some text of image, etc, enjoy the flexibility here and be creative with the display of your results.
+The `_clicker` property is provided for convenience, and is optional. Alternatively, you can design your result items in the `_handler` in such a way that they themselves can be clicked, e.g. maybe a link on some text, or a link on an image, etc.
 
 ## "Friend" elements
 
@@ -118,6 +136,22 @@ You can select one more more friends to trigger the autocomplete to run again:
 ```
 _friends: [
   'input[name=which]',
-  'input[id=foo]'
+  'select[name=foo]'
 ]
+```
+
+## Target
+
+By default, this module will automatically create a div right after the autocomplete's text input field, and it will use that div to place the results in.
+
+To render the results in a custom element, you can use the `_target` property:
+
+```
+_target: '#some-div'
+```
+
+Then elsewhere you can create the corresponding div, and the content determined by the autocomplete's `_handler` will be rendered here instead:
+
+```
+<div id="some-div"><!--  --></div>
 ```

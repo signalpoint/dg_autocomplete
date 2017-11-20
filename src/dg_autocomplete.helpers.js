@@ -54,7 +54,8 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
 
 dg_autocomplete.run = function(variables, input) {
   // Grab the results placeholder.
-  var placeholder = document.querySelectorAll('[autocomplete="' + input.id + '"]')[0];
+  var target = !variables._target ? '[autocomplete="' + input.id + '"]' : variables._target;
+  var placeholder = document.querySelectorAll(target)[0];
 
   // Prep a done handler to inject the html and run post renders.
   var done = function(html) {
