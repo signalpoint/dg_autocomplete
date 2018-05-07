@@ -62,9 +62,15 @@ form.title = {
 
       var items = [];
       for (var i = 0; i < data.length; i++) {
-        items.push(data[i]);
+        var row = data[i];
+        items.push({
+          _text: row.label,
+          _attributes: {
+            value: row.key // This "value" attribute is required.
+          }
+        });
       }
-      element.results = {
+      element.results = { // This "results" element is required.
         _theme: 'item_list',
         _items: items
       };
