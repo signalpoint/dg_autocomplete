@@ -161,3 +161,14 @@ Then elsewhere you can create the corresponding div, and the content determined 
 ```
 <div id="some-div"><!--  --></div>
 ```
+## Using with Bootstrap
+
+To add some Bootstrap styles to the autocomplete, try something like this:
+
+```
+_text_input: {
+  _attributes: {
+    class: ['form-control']
+  }
+},
+```
