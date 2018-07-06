@@ -107,3 +107,13 @@ dg.autocompleteVerify = function(variables) {
 
   return true;
 };
+
+dg_autocomplete.show = function(textInputId, hide) {
+  var selector = 'div[autocomplete="' + textInputId  + '"]';
+  var autocompleteDiv = dg.qs(selector);
+  hide ? dg.hide(autocompleteDiv) : dg.show(autocompleteDiv);
+};
+
+dg_autocomplete.hide = function(textInputId) {
+  dg_autocomplete.show(textInputId, true);
+};
