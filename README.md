@@ -30,7 +30,7 @@ form.title = {
   //_friends: ['#some-input', '#some-other-input'],
 
   // Optional, decide where the results will be rendered, defaults to directly after the text input.
-  //_target: ['#some-div']
+  //_target: '#some-div'
 
   // Query Drupal (or any API) for the external data...
   _fetcher: function(input) {
