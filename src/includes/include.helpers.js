@@ -36,31 +36,54 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
   if (!itemList._postRender) { itemList._postRender = []; }
   itemList._postRender.push(function() {
     var hiddenInput = document.getElementById(variables._attributes.id);
-    var selector = '[autocomplete="' + input.id + '"] ul.autocomplete li';
+    var selectorPrefix = variables._target ?
+      variables._target :
+      '[autocomplete="' + input.id + '"]';
+    var selector = selectorPrefix + ' ul.autocomplete li';
     var items = document.querySelectorAll(selector);
     for (var i = 0; i < items.length; i++) {
       items[i].setAttribute('delta', i);
       items[i].onclick = function() {
+
+        // Set the value on the hidden input.
         if (hiddenInput) {
           hiddenInput.setAttribute('value', this.getAttribute('value'));
         }
+
+        // If the item has a label, place it into the text field input.
+        var label = this.getAttribute('data-label');
+        if (label) { input.value = label; }
+
+        // Hide the items.
+        dg.hide(dg.qs(selectorPrefix));
+
+        // If they provided a click handler, use it.
         if (variables._clicker) {
           variables._clicker(hiddenInput, input, results, this);
         }
+        else {
+
+          // They didn't provide a click handler...
+
+        }
+
+
       };
     }
   });
 };
 
 dg_autocomplete.run = function(variables, input) {
+
   // Grab the results placeholder.
   var target = !variables._target ? '[autocomplete="' + input.id + '"]' : variables._target;
-  var placeholder = document.querySelectorAll(target)[0];
+  var placeholder = dg.qs(target);
 
   // Prep a done handler to inject the html and run post renders.
   var done = function(html) {
     placeholder.innerHTML = html;
     dg.runPostRenders();
+    dg.show(placeholder);
   };
 
   // Handle an empty input (aka text cleared out).
@@ -83,23 +106,19 @@ dg_autocomplete.run = function(variables, input) {
     }
     done(dg.render(element));
   });
+
 };
 
 dg.autocompleteVerify = function(variables) {
   var id = variables._attributes.id;
-  // Set up a default fetcher if one wasn't provided.
+
   if (!variables._fetcher) {
-    console.log('dg.theme_autocomplete - no _fetcher provided for element: ' + id);
-    // @TODO add default Views JSON based handler.
-    //variables._fetcher = function(input) { };
+    console.log('missing _fetcher for autocomplete: ' + id);
     return false;
   }
 
-  // Set up a default handler if one wasn't provided.
   if (!variables._handler) {
-    console.log('dg.theme_autocomplete - no _handler provided for element: ' + id);
-    // @TODO add default Views JSON based handler.
-    //variables._handler = function(input) { };
+    console.log('missing _handler for autocomplete: ' + id);
     return false;
   }
 
