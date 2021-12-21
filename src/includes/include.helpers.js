@@ -40,14 +40,14 @@ dg.autocompleteAttachPostRender = function(itemList, variables, input, results) 
     var items = document.querySelectorAll(selector);
     for (var i = 0; i < items.length; i++) {
       items[i].setAttribute('delta', i);
-      if (variables._clicker) {
-        items[i].onclick = function() {
-          if (hiddenInput) {
-            hiddenInput.setAttribute('value', this.getAttribute('value'));
-          }
+      items[i].onclick = function() {
+        if (hiddenInput) {
+          hiddenInput.setAttribute('value', this.getAttribute('value'));
+        }
+        if (variables._clicker) {
           variables._clicker(hiddenInput, input, results, this);
-        };
-      }
+        }
+      };
     }
   });
 };
