@@ -66,7 +66,8 @@ form.title = {
         items.push({
           _text: row.label,
           _attributes: {
-            value: row.key // This "value" attribute is required.
+            value: row.key, // This "value" attribute is required.
+            'data-label': row.label // Optional, text to place into text field input after click
           }
         });
       }
