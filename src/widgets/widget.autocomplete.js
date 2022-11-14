@@ -2,6 +2,9 @@
  * Themes an autocomplete widget.
  * @param variables
  *
+ *  _wrapper - {Object}
+ *    _attributes - {Object} Any attributes to place on the wrapper.
+ *
  *  _fetcher - {Function}(input)
  *    param {Object} input - The autocomplete text field.
  *    returns {Promise} A Promise that fetches data from Drupal, builds the results into an array and resolves them.
@@ -37,10 +40,14 @@ dg.theme_autocomplete = function(variables) {
   if (!dg.autocompleteVerify(variables)) { return; }
   var id = textInput._attributes.id;
 
+  var wrapper = variables._wrapper ? variables._wrapper : {};
+  dg.attributesInit(wrapper);
+  wrapper._attributes.class.push('autocomplete-wrapper');
+
   // Let's build the markup now...
 
   // Open the container.
-  var markup = '<div class="autocomplete-wrapper">';
+  var markup = '<div ' + dg.attributes(wrapper._attributes) + '>';
 
   // Add the hidden input.
   markup += '<input ' + dg.attributes(variables._attributes) + '/>';
@@ -59,7 +66,7 @@ dg.theme_autocomplete = function(variables) {
     _postRender: [function() {
 
       // When the user is done typing, run the autocomplete.
-      document.getElementById(id).addEventListener("keyup", function() {
+      document.getElementById(id).addEventListener('keyup', function() {
         clearTimeout(dg_autocomplete._typingTimer);
         var input = this;
         dg_autocomplete._typingTimer = setTimeout(function() {

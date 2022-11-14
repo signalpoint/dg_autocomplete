@@ -13,7 +13,14 @@ form.title = {
   _type: 'autocomplete',
   _title: 'Search',
   _title_placeholder: true,
-  
+
+  // Optional, attach any custom attributes to the wrapper.
+  _wrapper: {
+    _attributes: {
+      id: 'my-wrapper-id'
+    }
+  },
+
   // Optional, set up any custom attributes for the hidden input.
   _attributes: {
     foo: 'bar'
