@@ -4,8 +4,7 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     gp_concat = require('gulp-concat'),
     gp_rename = require('gulp-rename'),
-    gp_uglify = require('gulp-uglify'),
-    gp_minify_css = require('gulp-minify-css');
+    gp_uglify = require('gulp-uglify');
 
 var jsSrc = [
   './src/_dg_autocomplete.js',
